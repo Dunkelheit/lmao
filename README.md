@@ -1,10 +1,9 @@
 # lmao
 
-Load modules in an object.
+`lmao` Load modules in an object.
 
-## Usage
-
-Imagine you have a folder with the following structure.
+Imagine you have a folder with the following structure. In the subfolders you have some JavaScript modules and JSON
+files.
 
 ```
 .__ client/
@@ -26,7 +25,8 @@ Imagine you have a folder with the following structure.
    |__ store.js
 ```
 
-With `lmao` you can load all those JavaScript and JSON files directly into an object with a specific structure:
+With `lmao` you can load all those JavaScript and JSON files directly into an object with a specific structure. The
+values of the structure descriptor are [glob](https://www.npmjs.com/package/glob) paths.
  
 ```javascript
 lmao.load({
@@ -95,3 +95,35 @@ lmao.load({
     }
 }
 ```
+
+## Installation
+
+You can install `lmao` with `npm`:
+
+```
+npm install lmao
+```
+
+## Usage
+
+### lmao.load([target,] tree, callback)
+
+Loads the modules described in the `tree` structure, optionally merging them into the `target` object.
+ 
+#### tree (Object)
+
+`tree` describes the resulting object structure. The values of each property are `glob` paths.
+
+If you use an underscore (`_`) as the property name, then the modules will be loaded into the root of the parent
+property.
+
+#### callback - Function(err, tree)
+
+The callback function receives two arguments:
+
+* `err`: An error, if any
+* `tree`: The object with all modules loaded
+
+### lmao.loadSync([target,] tree)
+
+Synchronous version of `lmao.load`. Returns a object with all modules loaded.
