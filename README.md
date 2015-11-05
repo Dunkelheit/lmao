@@ -1,6 +1,7 @@
 # lmao
 
-`lmao` loads modules in an object.
+`lmao` (load modules in an object) is some kind of a bootloader that can be used when you have a large object tree meant
+to expose different features of, let's say, an API.
 
 Imagine you have a folder with the following structure. In the subfolders you have some JavaScript modules and JSON
 files.
@@ -96,6 +97,14 @@ lmao.load({
 }
 ```
 
+Now you can start using your API!
+
+```
+api.service.product.search(...);
+api.service.recipe.transformRecipList(...);
+api.client.rest(...);
+```
+
 ## Installation
 
 You can install `lmao` with `npm`:
@@ -106,33 +115,56 @@ npm install lmao
 
 ## Usage
 
+You can see some examples in the [example](example) folder.
+
 ### lmao.load([target,] tree, callback)
 
 Loads the modules described in the `tree` structure, optionally merging them into the `target` object.
 
-**target: Object, optional**
+**Arguments**
 
-If you already have an object you want to extend with the loaded modules, you can pass it as the first argument.
- 
-**tree: Object**
+* `target` - An optional object you might want to extend with the loaded modules
+* `tree` - An object describing the resulting object structure. The values of each property are `glob` paths. If you 
+use an underscore (`_`) as the property name, then the modules will be loaded into the root of the parent property.
+* `callback(err, tree)` - The usual callback function, where `tree` is the object with all modules loaded
 
-`tree` describes the resulting object structure. The values of each property are `glob` paths.
+**Example**
 
-If you use an underscore (`_`) as the property name, then the modules will be loaded into the root of the parent
-property.
-
-**callback: Function(err, tree)**
-
-The callback function receives two arguments:
-
-* `err`: An error, if any
-* `tree`: The object with all modules loaded
+```javascript
+lmao.load({
+    client: 'lib/client/**/*.js',
+    service: 'lib/service/**/*.js', 
+    transformation: 'lib/transformation/**/*.js',
+    data: {
+        _: 'lib/data/main.js',
+        js: 'lib/data/js/*.js',
+        json: 'lib/data/js/*.json'
+    }
+}, function (err, tree) {
+    console.log(tree);
+});
+```
 
 ### lmao.loadSync([target,] tree)
 
 Synchronous version of `lmao.load`. Returns a object with all modules loaded.
 
-## Gulp tasks
+**Example**
+
+```javascript
+var tree = lmao.loadSync({
+    client: 'lib/client/**/*.js',
+    service: 'lib/service/**/*.js', 
+    transformation: 'lib/transformation/**/*.js',
+    data: {
+        _: 'lib/data/main.js',
+        js: 'lib/data/js/*.js',
+        json: 'lib/data/js/*.json'
+    }
+}
+```
+
+## Development
 
 * Linting: `gulp lint`
 * Testing and coverage: `gulp test`
