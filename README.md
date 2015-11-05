@@ -132,10 +132,8 @@ The callback function receives two arguments:
 
 Synchronous version of `lmao.load`. Returns a object with all modules loaded.
 
-## Testing
+## Gulp tasks
 
-You can run linting, tests and coverage with:
-
-```
-gulp test
-```
+* Linting: `gulp lint`
+* Testing and coverage: `gulp test`
+* Generate JSDoc files: `gulp jsdoc`
