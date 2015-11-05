@@ -1,0 +1,19 @@
+{
+  "name": "lmao",
+  "version": "0.0.1",
+  "description": "Ayy, load modules in an object",
+  "main": "lib/lmao.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dunkelheit/lmao.git"
+  },
+  "author": "Arturo Martinez <dunkelheit@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Dunkelheit/lmao/issues"
+  },
+  "homepage": "https://github.com/Dunkelheit/lmao#readme"
+}
