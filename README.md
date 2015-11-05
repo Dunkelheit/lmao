@@ -131,3 +131,11 @@ The callback function receives two arguments:
 ### lmao.loadSync([target,] tree)
 
 Synchronous version of `lmao.load`. Returns a object with all modules loaded.
+
+## Testing
+
+You can run linting, tests and coverage with:
+
+```
+gulp test
+```

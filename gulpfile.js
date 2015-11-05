@@ -1,6 +1,5 @@
 'use strict';
 
-var benchmark = require('gulp-benchmark');
 var gulp = require('gulp');
 var istanbul = require('gulp-istanbul');
 var jshint = require('gulp-jshint');
