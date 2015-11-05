@@ -169,3 +169,11 @@ var tree = lmao.loadSync({
 * Linting: `gulp lint`
 * Testing and coverage: `gulp test`
 * Generate JSDoc files: `gulp jsdoc`
+
+## License
+
+[MIT](LICENSE)
+
+## Ayy?
+
+Lmao
