@@ -1,7 +1,7 @@
 {
   "name": "lmao",
   "version": "0.1.0",
-  "description": "Ayy, load modules in an object",
+  "description": "Load modules in an object",
   "main": "lib/lmao.js",
   "scripts": {
     "test": "gulp test"
@@ -30,5 +30,20 @@
     "gulp-shell": "^0.5.1",
     "jsdoc": "^3.3.3",
     "jshint-stylish": "^2.0.1"
-  }
+  },
+  "directories": {
+    "doc": "docs",
+    "example": "example",
+    "test": "test"
+  },
+  "keywords": [
+    "bootloader",
+    "load",
+    "objects",
+    "api",
+    "objectify",
+    "tree",
+    "folder",
+    "structure"
+  ]
 }
