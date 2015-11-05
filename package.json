@@ -1,6 +1,6 @@
 {
   "name": "lmao",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Ayy, load modules in an object",
   "main": "lib/lmao.js",
   "scripts": {
