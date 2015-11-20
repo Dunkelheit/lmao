@@ -14,7 +14,7 @@ var tree = {
     transformation: 'example/transformation/*.js'
 };
 
-function testApiProperties(api) {
+function testTreeApiProperties(api) {
     expect(api.client).to.have.keys('rest', 'soap', 'provider');
     expect(api.client.rest).to.be.a('function');
     expect(api.client.soap).to.be.a('function');
@@ -54,21 +54,36 @@ function testApiProperties(api) {
     expect(api.transformation.store.transformStoreDetails).to.be.a('function');
 }
 
+function testSimpleApiProperties(api) {
+    expect(api.product).to.be.an('object');
+    expect(api.product).to.have.keys('transformProductList', 'transformProductDetails');
+    expect(api.product.transformProductList).to.be.a('function');
+    expect(api.product.transformProductDetails).to.be.a('function');
+    expect(api.recipe).to.be.an('object');
+    expect(api.recipe).to.have.keys('transformRecipeList', 'transformRecipeDetails');
+    expect(api.recipe.transformRecipeList).to.be.a('function');
+    expect(api.recipe.transformRecipeDetails).to.be.a('function');
+    expect(api.store).to.be.an('object');
+    expect(api.store).to.have.keys('transformStoreList', 'transformStoreDetails');
+    expect(api.store.transformStoreList).to.be.a('function');
+    expect(api.store.transformStoreDetails).to.be.a('function');
+}
+
 describe('lmao', function () {
 
     describe('Asynchronous loading', function () {
 
-        it('Loads modules into a new object', function (done) {
+        it('Loads module tree into a new object', function (done) {
             lmao.load(tree, function (err, api) {
                 expect(err).to.not.exist;
                 expect(api).to.be.an('object');
                 expect(api).to.have.keys('client', 'static', 'service', 'transformation');
-                testApiProperties(api);
+                testTreeApiProperties(api);
                 done();
             });
         });
 
-        it('Loads modules into an existing object', function (done) {
+        it('Loads module tree into an existing object', function (done) {
             var api = {
                 version: '0.1.0',
                 log: console.log
@@ -79,24 +94,47 @@ describe('lmao', function () {
                 expect(api).to.have.keys('log', 'version', 'client', 'static', 'service', 'transformation');
                 expect(api.version).to.be.eql('0.1.0');
                 expect(api.log).to.be.a('function');
-                testApiProperties(api);
+                testTreeApiProperties(api);
                 done();
             });
         });
 
+        it('Loads modules into a new object', function (done) {
+            lmao.load('example/transformation/*.js', function (err, api) {
+                expect(api).to.be.an('object');
+                expect(api).to.have.keys('product', 'recipe', 'store');
+                testSimpleApiProperties(api);
+                done();
+            });
+        });
+
+        it('Loads modules into an existing object', function (done) {
+            var api = {
+                version: '0.1.0',
+                log: console.log
+            };
+            lmao.load(api, 'example/transformation/*.js', function (err, api) {
+                expect(api).to.be.an('object');
+                expect(api).to.have.keys('product', 'recipe', 'store', 'version', 'log');
+                expect(api.version).to.be.eql('0.1.0');
+                expect(api.log).to.be.a('function');
+                testSimpleApiProperties(api);
+                done();
+            });
+        });
     });
 
     describe('Synchronous loading', function () {
 
-        it('Loads modules into a new object', function (done) {
+        it('Loads module tree into a new object', function (done) {
             var api = lmao.loadSync(tree);
             expect(api).to.be.an('object');
             expect(api).to.have.keys('client', 'static', 'service', 'transformation');
-            testApiProperties(api);
+            testTreeApiProperties(api);
             done();
         });
 
-        it('Loads modules into an existing object', function (done) {
+        it('Loads module tree into an existing object', function (done) {
             var api = {
                 version: '0.1.0',
                 log: console.log
@@ -106,7 +144,29 @@ describe('lmao', function () {
             expect(api).to.have.keys('log', 'version', 'client', 'static', 'service', 'transformation');
             expect(api.version).to.be.eql('0.1.0');
             expect(api.log).to.be.a('function');
-            testApiProperties(api);
+            testTreeApiProperties(api);
+            done();
+        });
+
+        it('Loads modules into a new object', function (done) {
+            var api = lmao.loadSync('example/transformation/*.js');
+            expect(api).to.be.an('object');
+            expect(api).to.have.keys('product', 'recipe', 'store');
+            testSimpleApiProperties(api);
+            done();
+        });
+
+        it('Loads modules into an existing object', function (done) {
+            var api = {
+                version: '0.1.0',
+                log: console.log
+            };
+            lmao.loadSync(api, 'example/transformation/*.js');
+            expect(api).to.be.an('object');
+            expect(api).to.have.keys('log', 'version', 'product', 'recipe', 'store');
+            expect(api.version).to.be.eql('0.1.0');
+            expect(api.log).to.be.a('function');
+            testSimpleApiProperties(api);
             done();
         });
     });
