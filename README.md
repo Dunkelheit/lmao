@@ -124,11 +124,14 @@ Loads the modules described in the `tree` structure, optionally merging them int
 **Arguments**
 
 * `target` - An optional object you might want to extend with the loaded modules
-* `tree` - An object describing the resulting object structure. The values of each property are `glob` paths. If you 
-use an underscore (`_`) as the property name, then the modules will be loaded into the root of the parent property.
+* `tree` - An object or a string
+    * Object - Descriptor of the resulting object structure. The values of each property are `glob` paths. If you use an underscore (`_`) as the property name, then the modules will be loaded into the root of the parent property.
+    * String - A `glob` path of files to load
 * `callback(err, tree)` - The usual callback function, where `tree` is the object with all modules loaded
 
-**Example**
+**Examples**
+
+Builds an object loaded with modules in a specific structure. 
 
 ```javascript
 lmao.load({
@@ -145,11 +148,19 @@ lmao.load({
 });
 ```
 
+Loads all `.js` files under the path `lib/client` as properties in an object.
+
+```
+lmao.load('lib/client/**/*.js', function (err, modules) {
+    console.log(tree);
+});
+```
+
 ### lmao.loadSync([target,] tree)
 
-Synchronous version of `lmao.load`. Returns a object with all modules loaded.
+Synchronous version of `lmao.load`. `target` and `tree` have the same behavior described before. Returns a object with all modules loaded.
 
-**Example**
+**Examples**
 
 ```javascript
 var tree = lmao.loadSync({
@@ -162,6 +173,10 @@ var tree = lmao.loadSync({
         json: 'lib/data/js/*.json'
     }
 }
+```
+
+```
+var api = lmao.load('lib/client/**/*.js');
 ```
 
 ## Development
