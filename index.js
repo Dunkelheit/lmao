@@ -85,7 +85,7 @@ function lmao(target, tree) {
       return target;
     }
 }
-lmao.load = lmao; // Backward compatibility
+lmao.load = lmao.loadSync = lmao; // Backward compatibility
 
 module.exports = lmao;
 
