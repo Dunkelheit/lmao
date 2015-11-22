@@ -2,7 +2,7 @@
 
 var expect = require('chai').expect;
 
-var lmao = require('../lib/lmao');
+var lmao = require('../index');
 
 var tree = {
     client: {
@@ -127,7 +127,7 @@ describe('lmao', function () {
     describe('Synchronous loading', function () {
 
         it('Loads module tree into a new object', function (done) {
-            var api = lmao.loadSync(tree);
+            var api = lmao.load(tree);
             expect(api).to.be.an('object');
             expect(api).to.have.keys('client', 'static', 'service', 'transformation');
             testTreeApiProperties(api);
@@ -139,7 +139,7 @@ describe('lmao', function () {
                 version: '0.1.0',
                 log: console.log
             };
-            lmao.loadSync(api, tree);
+            lmao.load(api, tree);
             expect(api).to.be.an('object');
             expect(api).to.have.keys('log', 'version', 'client', 'static', 'service', 'transformation');
             expect(api.version).to.be.eql('0.1.0');
@@ -149,7 +149,7 @@ describe('lmao', function () {
         });
 
         it('Loads modules into a new object', function (done) {
-            var api = lmao.loadSync('example/transformation/*.js');
+            var api = lmao.load('example/transformation/*.js');
             expect(api).to.be.an('object');
             expect(api).to.have.keys('product', 'recipe', 'store');
             testSimpleApiProperties(api);
@@ -161,7 +161,7 @@ describe('lmao', function () {
                 version: '0.1.0',
                 log: console.log
             };
-            lmao.loadSync(api, 'example/transformation/*.js');
+            lmao.load(api, 'example/transformation/*.js');
             expect(api).to.be.an('object');
             expect(api).to.have.keys('log', 'version', 'product', 'recipe', 'store');
             expect(api.version).to.be.eql('0.1.0');

@@ -6,15 +6,17 @@ var jshint = require('gulp-jshint');
 var mocha = require('gulp-mocha');
 var shell = require('gulp-shell');
 
+var SRC = ['./index.js'];
+
 gulp.task('lint', function () {
-    return gulp.src([ './lib/**/*.js' ])
+    return gulp.src(SRC)
         .pipe(jshint())
         .pipe(jshint.reporter('jshint-stylish'))
         .pipe(jshint.reporter('fail'));
 });
 
 gulp.task('unit-test', function (done) {
-    gulp.src(['./lib/lmao.js'])
+    gulp.src(SRC)
         .pipe(istanbul())
         .pipe(istanbul.hookRequire())
         .on('finish', function () {
