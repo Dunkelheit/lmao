@@ -6,9 +6,9 @@ var path = require('path');
 var cwd = process.cwd();
 
 // https://gist.github.com/gabrieleds/dc38c958ee74481f7a12
-function series (fns, done) {
+function series(fns, done) {
     while (fns.length) {
-      done = fns.pop().bind(null, done);
+        done = fns.pop().bind(null, done);
     }
     done();
 }
@@ -18,7 +18,7 @@ function iterate(items, fn) {
     keys.forEach(function (key) {
         var val = items[key];
         if ('string' !== typeof val) {
-          return iterate(val, fn);
+            return iterate(val, fn);
         }
         fn(key, val, items);
     });
@@ -40,7 +40,7 @@ function lmao(target, tree) {
     }
     if ('string' === typeof tree) {
         tree = {
-          _: tree
+            _: tree
         };
     }
 
@@ -55,10 +55,11 @@ function lmao(target, tree) {
                 items[key][name] = data;
             }
         }
+
         loaders.push(function (next) {
             function done(err, files) {
                 if (err) {
-                  return next(err);
+                    return next(err);
                 }
                 items[key] = {};
                 files.forEach(function (file) {
@@ -67,8 +68,9 @@ function lmao(target, tree) {
                 });
                 next();
             }
+
             if (isSync) {
-              return done(null, glob.sync(val));
+                return done(null, glob.sync(val));
             }
             glob(val, done);
         });
@@ -77,12 +79,12 @@ function lmao(target, tree) {
     series(loaders, function () {
         Object.assign(target, result);
         if (!isSync) {
-          callback(null, target);
+            callback(null, target);
         }
     });
 
     if (isSync) {
-      return target;
+        return target;
     }
 }
 lmao.load = lmao.loadSync = lmao; // Backward compatibility
