@@ -30,7 +30,9 @@ With `lmao` you can load all those JavaScript and JSON files directly into an ob
 values of the structure descriptor are [glob](https://www.npmjs.com/package/glob) paths.
  
 ```javascript
-lmao.load({
+var lmao = require('lmao');
+
+lmao({
     client: {
         _: 'example/client/*.js',
         provider: 'example/client/provider/*.js'
@@ -117,9 +119,10 @@ npm install lmao
 
 You can see some examples in the [example](example) folder.
 
-### lmao.load([target,] tree, callback)
+### lmao([target,] tree[, callback])
 
-Loads the modules described in the `tree` structure, optionally merging them into the `target` object.
+Loads the modules described in the `tree` structure, optionally merging them into the `target` object. If the function
+is used synchronously (see arguments) then the loaded modules will be returned by this function.
 
 **Arguments**
 
@@ -127,14 +130,16 @@ Loads the modules described in the `tree` structure, optionally merging them int
 * `tree` - An object or a string
     * Object - Descriptor of the resulting object structure. The values of each property are `glob` paths. If you use an underscore (`_`) as the property name, then the modules will be loaded into the root of the parent property.
     * String - A `glob` path of files to load
-* `callback(err, tree)` - The usual callback function, where `tree` is the object with all modules loaded
+* `callback(err, tree)` - An optional callback function, where `tree` is the object with all modules loaded
+    * If `callback` is present, `lmao` will perform its tasks **asynchronosly**, and the loaded modules will be part of the callback function
+    * If `callback` is not present, `lmao` will perform its tasks **synchronously**, and the loaded modules will be returned
 
 **Examples**
 
 Builds an object loaded with modules in a specific structure. 
 
 ```javascript
-lmao.load({
+lmao({
     client: 'lib/client/**/*.js',
     service: 'lib/service/**/*.js', 
     transformation: 'lib/transformation/**/*.js',
@@ -156,14 +161,10 @@ lmao.load('lib/client/**/*.js', function (err, modules) {
 });
 ```
 
-### lmao.loadSync([target,] tree)
-
-Synchronous version of `lmao.load`. `target` and `tree` have the same behavior described before. Returns a object with all modules loaded.
-
-**Examples**
+Using `lmao` synchronously.
 
 ```javascript
-var tree = lmao.loadSync({
+var tree = lmao({
     client: 'lib/client/**/*.js',
     service: 'lib/service/**/*.js', 
     transformation: 'lib/transformation/**/*.js',
@@ -174,6 +175,8 @@ var tree = lmao.loadSync({
     }
 }
 ```
+
+Another synchronous example.
 
 ```
 var api = lmao.load('lib/client/**/*.js');
