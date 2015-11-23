@@ -182,6 +182,11 @@ Another synchronous example.
 var api = lmao.load('lib/client/**/*.js');
 ```
 
+### deprecated: lmao.load([target,] tree, callback) and lmao.loadSync([target,] tree)
+
+These deprecated functions are kept for backwards compatibility and behave the same way as `lmao.load` does, but each
+one is meant for either a synchronous or an asynchronous behavior. They will be removed in the next major release.
+
 ## Development
 
 * Linting: `gulp lint`
