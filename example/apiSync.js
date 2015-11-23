@@ -1,6 +1,6 @@
 'use strict';
 
-var lmao = require('../lib/lmao');
+var lmao = require('../index');
 var inspect = require('util').inspect;
 
 var api = lmao.loadSync({
