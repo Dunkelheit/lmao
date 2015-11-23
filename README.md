@@ -155,7 +155,7 @@ lmao({
 
 Loads all `.js` files under the path `lib/client` as properties in an object.
 
-```
+```javascript
 lmao.load('lib/client/**/*.js', function (err, modules) {
     console.log(tree);
 });
@@ -178,7 +178,7 @@ var tree = lmao({
 
 Another synchronous example.
 
-```
+```javascript
 var api = lmao.load('lib/client/**/*.js');
 ```
 
