@@ -1,8 +1,8 @@
 'use strict';
 
 module.exports = {
-    transformProductList: function () {
-        return [];
+    transformProductList: function (searchResult) {
+        return [searchResult];
     },
     transformProductDetails: function () {
         return {};

@@ -1,10 +1,13 @@
 'use strict';
 
+var api = require('../api');
+
 module.exports = {
     search: function () {
-        return [];
+        var result = api.client.provider.sap.search();
+        return api.transformation.product.transformProductList(result);
     },
     details: function () {
-        return {};
+        return api.client.provider.sap.details();
     }
 };

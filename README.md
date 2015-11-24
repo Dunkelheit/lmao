@@ -32,7 +32,7 @@ values of the structure descriptor are [glob](https://www.npmjs.com/package/glob
 ```javascript
 var lmao = require('lmao');
 
-lmao({
+var api = module.exports = lmao({
     client: {
         _: 'example/client/*.js',
         provider: 'example/client/provider/*.js'
@@ -40,9 +40,9 @@ lmao({
     static: 'example/public/**/*.json',
     service: 'example/service/*.js',
     transformation: 'example/transformation/*.js'
-}, function (err, api) {
-    console.log(inspect(api, { depth: null, colors: true }));
 });
+
+console.log(inspect(api, { depth: null, colors: true }));
 
 //
 // The console.log would output:
@@ -139,7 +139,7 @@ is used synchronously (see arguments) then the loaded modules will be returned b
 Builds an object loaded with modules in a specific structure. 
 
 ```javascript
-lmao({
+var api = module.exports = lmao({
     client: 'lib/client/**/*.js',
     service: 'lib/service/**/*.js', 
     transformation: 'lib/transformation/**/*.js',
@@ -148,44 +148,14 @@ lmao({
         js: 'lib/data/js/*.js',
         json: 'lib/data/js/*.json'
     }
-}, function (err, tree) {
-    console.log(tree);
 });
 ```
 
 Loads all `.js` files under the path `lib/client` as properties in an object.
 
 ```javascript
-lmao.load('lib/client/**/*.js', function (err, modules) {
-    console.log(tree);
-});
+var api = module.exports = lmao.load('lib/client/**/*.js');
 ```
-
-Using `lmao` synchronously.
-
-```javascript
-var tree = lmao({
-    client: 'lib/client/**/*.js',
-    service: 'lib/service/**/*.js', 
-    transformation: 'lib/transformation/**/*.js',
-    data: {
-        _: 'lib/data/main.js',
-        js: 'lib/data/js/*.js',
-        json: 'lib/data/js/*.json'
-    }
-}
-```
-
-Another synchronous example.
-
-```javascript
-var api = lmao.load('lib/client/**/*.js');
-```
-
-### deprecated: lmao.load([target,] tree, callback) and lmao.loadSync([target,] tree)
-
-These deprecated functions are kept for backwards compatibility and behave the same way as `lmao.load` does, but each
-one is meant for either a synchronous or an asynchronous behavior. They will be removed in the next major release.
 
 ## Development
 
