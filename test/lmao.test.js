@@ -4,16 +4,17 @@ var expect = require('chai').expect;
 
 var lmao = require('../index');
 
-var tree = {
-    client: {
-        _: 'example/client/*.js',
-        provider: 'example/client/provider/intershop.js'
-    },
-    static: 'example/public/**/*.json',
+var descriptor = {
+    _: 'example/util.js', // Root level modules
+    client: 'example/client/*.js',
+    'client.provider': 'example/client/provider/intershop.js',
+    'static': 'example/public/**/*.json',
     transformation: 'example/transformation/*.js'
 };
 
-function testTreeApiProperties(api) {
+function testApiProperties(api) {
+    expect(api.util).to.have.keys('log');
+    expect(api.util.log).to.be.a('function');
     expect(api.client).to.have.keys('rest', 'soap', 'provider');
     expect(api.client.rest).to.be.a('function');
     expect(api.client.soap).to.be.a('function');
@@ -40,57 +41,23 @@ function testTreeApiProperties(api) {
     expect(api.transformation.store.transformStoreDetails).to.be.a('function');
 }
 
-function testSimpleApiProperties(api) {
-    expect(api.product).to.be.an('object').and.to.have.keys('transformProductList', 'transformProductDetails');
-    expect(api.product.transformProductList).to.be.a('function');
-    expect(api.product.transformProductDetails).to.be.a('function');
-    expect(api.recipe).to.be.an('object').and.to.have.keys('transformRecipeList', 'transformRecipeDetails');
-    expect(api.recipe.transformRecipeList).to.be.a('function');
-    expect(api.recipe.transformRecipeDetails).to.be.a('function');
-    expect(api.store).to.be.an('object').and.to.have.keys('transformStoreList', 'transformStoreDetails');
-    expect(api.store.transformStoreList).to.be.a('function');
-    expect(api.store.transformStoreDetails).to.be.a('function');
-}
-
 describe('lmao', function () {
-    it('Loads module tree into a new object', function (done) {
-        var api = lmao(tree);
-        expect(api).to.be.an('object');
-        expect(api).to.have.keys('client', 'static', 'transformation');
-        testTreeApiProperties(api);
-        done();
-    });
-
-    it('Loads module tree into an existing object', function (done) {
-        var api = {
-            version: '0.1.0',
-            log: console.log
-        };
-        lmao(api, tree);
-        expect(api).to.be.an('object').and.to.have.keys('log', 'version', 'client', 'static', 'transformation');
-        expect(api.version).to.be.eql('0.1.0');
-        expect(api.log).to.be.a('function');
-        testTreeApiProperties(api);
-        done();
-    });
-
     it('Loads modules into a new object', function (done) {
-        var api = lmao('example/transformation/*.js');
-        expect(api).to.be.an('object').and.to.have.keys('product', 'recipe', 'store');
-        testSimpleApiProperties(api);
+        var api = lmao(descriptor);
+        expect(api).to.be.an('object');
+        expect(api).to.have.keys('client', 'static', 'transformation', 'util');
+        testApiProperties(api);
         done();
     });
 
     it('Loads modules into an existing object', function (done) {
         var api = {
-            version: '0.1.0',
-            log: console.log
+            version: '0.1.0'
         };
-        lmao(api, 'example/transformation/*.js');
-        expect(api).to.be.an('object').and.to.have.keys('log', 'version', 'product', 'recipe', 'store');
+        lmao(api, descriptor);
+        expect(api).to.be.an('object').and.to.have.keys('util', 'version', 'client', 'static', 'transformation');
         expect(api.version).to.be.eql('0.1.0');
-        expect(api.log).to.be.a('function');
-        testSimpleApiProperties(api);
+        testApiProperties(api);
         done();
     });
 

@@ -7,7 +7,7 @@ function inspect(v) {
     return util.inspect(v, { depth: null, colors: true });
 }
 
-api.log(inspect(api));
+api.util.log(inspect(api));
 
 var result = api.service.product.search();
 

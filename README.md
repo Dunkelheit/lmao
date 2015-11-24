@@ -1,11 +1,8 @@
 # lmao
 
-`lmao` (load modules in an object) is some kind of a bootloader that can be used when you have a large object tree meant
-to expose different features of, let's say, an API.
+`lmao` (load modules in an object) helps you load modules into an object with a specific structure. 
 
-Imagine you have a folder with the following structure. In the subfolders you have some JavaScript modules and JSON
-files.
-
+Imagine you have a project with the following structure:
 ```
 .__ client/
 |  |__ provider/
@@ -21,82 +18,72 @@ files.
 |  |__ recipe.js
 |  |__ store.js
 |__ transformation/
-   |__ product.js
-   |__ recipe.js
-   |__ store.js
+|  |__ product.js
+|  |__ recipe.js
+|  |__ store.js
+|__util.js
 ```
 
-With `lmao` you can load all those JavaScript and JSON files directly into an object with a specific structure. The
-values of the structure descriptor are [glob](https://www.npmjs.com/package/glob) paths.
- 
+And now you want to:
+* Import all these modules into a single object -we will call it "API" from now on-
+* Have total control over the structure of the resulting API object
+* Not worry to manually add, for instance, a new file you created inside `service/`
+* Not worry about circular dependencies while loading all these modules
+
+With `lmao` you can load all those modules directly into an object with a specific structure. `lmao` only needs what
+we call a _descriptor_, which defines:
+* The structure of the API object (using dot notation à la [keypather](http://npmjs.com/package/keypather))
+* What files will be loaded (using [glob](https://www.npmjs.com/package/glob) path notation)
+
+Example:
 ```javascript
 var lmao = require('lmao');
 
-var api = module.exports = lmao({
-    client: {
-        _: 'example/client/*.js',
-        provider: 'example/client/provider/*.js'
-    },
+var api = module.exports = {
+    version: '0.1.0'
+};
+
+lmao(api, {
+    _: 'example/util.js', // Root level modules
+    client: 'example/client/*.js',
+    'client.provider': 'example/client/provider/*.js',
     static: 'example/public/**/*.json',
-    service: 'example/service/*.js',
-    transformation: 'example/transformation/*.js'
+    transformation: 'example/transformation/*.js',
+    service: 'example/service/*.js'
 });
 
 console.log(inspect(api, { depth: null, colors: true }));
 
 //
-// The console.log would output:
+// console.log output
 //
-{
-    client: {
-        provider: {
-            sap: {
-                search: [Function],
-                details: [Function]
-            }
-        },
-        rest: [Function: rest],
-        soap: [Function: soap]
-    },
-    static: {
-        disclaimer: {
-            title: 'Disclaimer',
-            descripton: 'Lorem ipsum dolor sit amet'
-        },
-        privacy: {
-            title: 'Privacy',
-            descripton: 'Lorem ipsum dolor sit amet'
-        }
-    },
-    service: {
-        product: {
-            search: [Function],
-            details: [Function]
-        },
-        recipe: {
-            search: [Function],
-            details: [Function]
-        },
-        store: {
-            search: [Function],
-            details: [Function]
-        }
-    },
-    transformation: {
-        product: {
-            transformProductList: [Function],
-            transformProductDetails: [Function]
-        },
-        recipe: {
-            transformRecipeList: [Function],
-            transformRecipeDetails: [Function]
-        },
-        store: {
-            transformStoreList: [Function],
-            transformStoreDetails: [Function]
-        }
-    }
-}
+{ version: '0.1.0',
+  util: { log: [Function: bound ] },
+  client:
+   { rest: [Function: rest],
+     soap: [Function: soap],
+     provider:
+      { intershop: { search: [Function], details: [Function] },
+        sap: { search: [Function], details: [Function] } } },
+  static:
+   { disclaimer:
+      { title: 'Disclaimer',
+        descripton: 'Lorem ipsum dolor sit amet' },
+     privacy: { title: 'Privacy', descripton: 'Lorem ipsum dolor sit amet' } },
+  transformation:
+   { product:
+      { transformProductList: [Function],
+        transformProductDetails: [Function] },
+     recipe:
+      { transformRecipeList: [Function],
+        transformRecipeDetails: [Function] },
+     store:
+      { transformStoreList: [Function],
+        transformStoreDetails: [Function] } },
+  service:
+   { product: { search: [Function], details: [Function] },
+     recipe: { search: [Function], details: [Function] },
+     store: { search: [Function], details: [Function] } } }
 ```
 
 Now you can start using your API!
@@ -117,45 +104,36 @@ npm install lmao
 
 ## Usage
 
-You can see some examples in the [example](example) folder.
+You can see a full-fledged example, which includes circular dependencies, in the [example](example) folder.
 
-### lmao([target,] tree[, callback])
+### lmao([target,] descriptor)
 
-Loads the modules described in the `tree` structure, optionally merging them into the `target` object. If the function
-is used synchronously (see arguments) then the loaded modules will be returned by this function.
+Loads modules into an object as defined by `descriptor`, optionally merging them into the existing `target` object.
 
 **Arguments**
 
-* `target` - An optional object you might want to extend with the loaded modules
-* `tree` - An object or a string
-    * Object - Descriptor of the resulting object structure. The values of each property are `glob` paths. If you use an underscore (`_`) as the property name, then the modules will be loaded into the root of the parent property.
-    * String - A `glob` path of files to load
-* `callback(err, tree)` - An optional callback function, where `tree` is the object with all modules loaded
-    * If `callback` is present, `lmao` will perform its tasks **asynchronosly**, and the loaded modules will be part of the callback function
-    * If `callback` is not present, `lmao` will perform its tasks **synchronously**, and the loaded modules will be returned
+* `target` - Optional object where the modules will be loaded into. Existing properties will be overwritten.
+* `descriptor` - An object that describes what modules will be loaded, and in what path they'll be placed.
+  * The _keys_ of the descriptor are object paths in dot notation, like those of [keypather](http://npmjs.com/package/keypather). There is one special key name, the underscore (`_`), which refers to the root of the target object.   
+  * The _values_ of the descriptor are [glob](https://www.npmjs.com/package/glob) paths.
 
-**Examples**
+**Example**
 
 Builds an object loaded with modules in a specific structure. 
 
 ```javascript
 var api = module.exports = lmao({
+    _: 'lib/util.js',
     client: 'lib/client/**/*.js',
     service: 'lib/service/**/*.js', 
     transformation: 'lib/transformation/**/*.js',
-    data: {
-        _: 'lib/data/main.js',
-        js: 'lib/data/js/*.js',
-        json: 'lib/data/js/*.json'
-    }
+    data: 'lib/data/index.js',
+    'data.bodies': 'lib/data/bodies/*.js',
+    'data.schemas': 'lib/data/schemas/*.js',
+    'data.staticJSON': 'lib/data/static/*.json'
 });
 ```
 
-Loads all `.js` files under the path `lib/client` as properties in an object.
-
-```javascript
-var api = module.exports = lmao.load('lib/client/**/*.js');
-```
 
 ## Development
 

@@ -22,7 +22,8 @@
   },
   "homepage": "https://github.com/Dunkelheit/lmao#readme",
   "dependencies": {
-    "glob": "^5.0.15"
+    "glob": "^5.0.15",
+    "keypather": "^1.10.1"
   },
   "devDependencies": {
     "chai": "^3.4.0",
