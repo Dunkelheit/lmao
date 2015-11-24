@@ -1,4 +1,9 @@
 
+2.0.0 / 2015-11-24
+==================
+
+  * feat: switched to a descriptor exclusively based on `keypather` and `glob`
+
 1.0.0 / 2015-11-24
 ==================
 
