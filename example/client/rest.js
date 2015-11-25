@@ -1,5 +1,5 @@
 'use strict';
 
-module.exports = function rest(fakeResponse) {
-    return fakeResponse;
+module.exports = function rest(echo) {
+    return echo;
 };

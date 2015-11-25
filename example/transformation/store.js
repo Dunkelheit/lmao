@@ -1,10 +1,10 @@
 'use strict';
 
 module.exports = {
-    transformStoreList: function () {
-        return [];
+    transformStoreList: function (storeList) {
+        return storeList;
     },
-    transformStoreDetails: function () {
-        return {};
+    transformStoreDetails: function (storeDetails) {
+        return storeDetails;
     }
 };

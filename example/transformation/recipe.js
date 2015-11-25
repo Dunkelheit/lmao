@@ -1,10 +1,10 @@
 'use strict';
 
 module.exports = {
-    transformRecipeList: function () {
-        return [];
+    transformRecipeList: function (recipeList) {
+        return recipeList;
     },
-    transformRecipeDetails: function () {
-        return {};
+    transformRecipeDetails: function (recipeDetails) {
+        return recipeDetails;
     }
 };

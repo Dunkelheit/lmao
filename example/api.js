@@ -7,9 +7,16 @@ var api = module.exports = {
 };
 
 lmao(api, {
-    _: 'example/util.js', // Root level modules
+    _root: 'example/util.js', // Root level modules
     client: 'example/client/*.js',
-    'client.provider': 'example/client/provider/*.js',
+    'client.sap': {
+        _root: 'example/client/sap/index.js',
+        _children: 'example/client/sap/modules/*.js'
+    },
+    'client.netsuite': {
+        _root: 'example/client/netsuite/index.js',
+        _children: 'example/client/netsuite/modules/*.js'
+    },
     static: 'example/public/**/*.json',
     transformation: 'example/transformation/*.js',
     service: 'example/service/*.js'

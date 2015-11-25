@@ -10,12 +10,15 @@
   "latedef": true,
   "newcap": true,
   "noarg": true,
-  "predef": [ "-Promise" ],
   "quotmark": "single",
   "undef": true,
   "unused": true,
   "strict": false,
   "trailing": true,
   "smarttabs": true,
-  "white": true
+  "white": true,
+  "globals": {
+    "describe": false,
+    "it": false
+  }
 }

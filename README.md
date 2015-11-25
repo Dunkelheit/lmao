@@ -5,8 +5,15 @@
 Imagine you have a project with the following structure:
 ```
 .__ client/
-|  |__ provider/
-|  |  |__ sap.js
+|  |__ netsuite/
+|  |  |__ modules/
+|  |  |   |__ stores.js
+|  |  |__ index.js
+|  |__ sap/
+|  |  |__ modules/
+|  |  |   |__ products.js
+|  |  |   |__ recipes.js
+|  |  |__ index.js
 |  |__ rest.js
 |  |__ soap.js
 |__ public/
@@ -44,32 +51,43 @@ var api = module.exports = {
 };
 
 lmao(api, {
-    _: 'example/util.js', // Root level modules
+    _root: 'example/util.js', // Root level modules
     client: 'example/client/*.js',
-    'client.provider': 'example/client/provider/*.js',
+    'client.sap': {
+        _root: 'example/client/sap/index.js',
+        _children: 'example/client/sap/modules/*.js'
+    },
+    'client.netsuite': {
+        _root: 'example/client/netsuite/index.js',
+        _children: 'example/client/netsuite/modules/*.js'
+    },
     static: 'example/public/**/*.json',
     transformation: 'example/transformation/*.js',
     service: 'example/service/*.js'
 });
 
-console.log(inspect(api, { depth: null, colors: true }));
-
 //
 // console.log output
 //
-{ version: '0.1.0',
+ version: '0.1.0',
   util: { log: [Function: bound ] },
   client:
    { rest: [Function: rest],
      soap: [Function: soap],
-     provider:
-      { intershop: { search: [Function], details: [Function] },
-        sap: { search: [Function], details: [Function] } } },
+     sap:
+      { request: [Function],
+        options: { remoteUri: 'http://my-sap.com/my-api' },
+        products: { search: [Function], details: [Function] },
+        recipes: { search: [Function], details: [Function] } },
+     netsuite:
+      { request: [Function],
+        options: { remoteUri: 'http://my-netsuite.com/my-api' },
+        stores: { search: [Function], details: [Function] } } },
   static:
    { disclaimer:
       { title: 'Disclaimer',
-        descripton: 'Lorem ipsum dolor sit amet' },
-     privacy: { title: 'Privacy', descripton: 'Lorem ipsum dolor sit amet' } },
+        description: 'Lorem ipsum dolor sit amet' },
+     privacy: { title: 'Privacy', description: 'Lorem ipsum dolor sit amet' } },
   transformation:
    { product:
       { transformProductList: [Function],
@@ -114,23 +132,29 @@ Loads modules into an object as defined by `descriptor`, optionally merging them
 
 * `target` - Optional object where the modules will be loaded into. Existing properties will be overwritten.
 * `descriptor` - An object that describes what modules will be loaded, and in what path they'll be placed.
-  * The _keys_ of the descriptor are object paths in dot notation, like those of [keypather](http://npmjs.com/package/keypather). There is one special key name, the underscore (`_`), which refers to the root of the target object.   
-  * The _values_ of the descriptor are [glob](https://www.npmjs.com/package/glob) paths.
+  * The _keys_ of the descriptor are object paths in dot notation, like those of [keypather](http://npmjs.com/package/keypather).   
+  * The _values_ of the descriptor are [glob](https://www.npmjs.com/package/glob) paths
+    * If you want to have more control over the destination, you can wrap the values in an object with properties `_root` and `_children`. Root modules will not use the file name as property name; children will. 
 
 **Example**
 
 Builds an object loaded with modules in a specific structure. 
 
 ```javascript
-var api = module.exports = lmao({
-    _: 'lib/util.js',
-    client: 'lib/client/**/*.js',
-    service: 'lib/service/**/*.js', 
-    transformation: 'lib/transformation/**/*.js',
-    data: 'lib/data/index.js',
-    'data.bodies': 'lib/data/bodies/*.js',
-    'data.schemas': 'lib/data/schemas/*.js',
-    'data.staticJSON': 'lib/data/static/*.json'
+lmao(api, {
+    _root: 'example/util.js', // Root level modules
+    client: 'example/client/*.js',
+    'client.sap': {
+        _root: 'example/client/sap/index.js', // Root level modules (client.sap.*)
+        _children: 'example/client/sap/modules/*.js' // Children modules (client.sap.<filename>.*)
+    },
+    'client.netsuite': {
+        _root: 'example/client/netsuite/index.js',
+        _children: 'example/client/netsuite/modules/*.js'
+    },
+    static: 'example/public/**/*.json',
+    transformation: 'example/transformation/*.js',
+    service: 'example/service/*.js'
 });
 ```
 
