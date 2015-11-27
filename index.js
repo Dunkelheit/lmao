@@ -32,11 +32,11 @@ function lmao(target, descriptor) {
         }
         var root = filepath._root;
         if (root) {
-            set(filepath._root, key, true);
+            set(root, key, true);
         }
         var children = filepath._children;
         if (children) {
-            set(filepath._children, key, false);
+            set(children, key, false);
         }
     });
 
