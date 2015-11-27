@@ -7,6 +7,8 @@ function inspect(v) {
     return util.inspect(v, { depth: null, colors: true });
 }
 
+console.log(inspect(api));
+
 api.util.log('API has been loaded:', inspect(api));
 
 var productList = api.service.product.search();

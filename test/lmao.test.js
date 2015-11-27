@@ -5,7 +5,7 @@ var expect = require('chai').expect;
 var lmao = require('../index');
 
 var descriptor = {
-    _root: 'test/api/util.js', // Root level modules
+    _root: ['test/api/util.js', 'test/api/metrics.js'],
     service: {
         _root: 'test/api/service/index.js',
         _children: 'test/api/service/modules/*.js'
@@ -30,13 +30,17 @@ function testApiProperties(api) {
     expect(api.static).to.be.an('object').and.have.keys('disclaimer', 'privacy');
     expect(api.static.disclaimer).to.be.an('object').and.have.keys('title', 'description');
     expect(api.static.privacy).to.be.an('object').and.have.keys('title', 'description');
+    expect(api.util).to.be.an('object').and.have.keys('log');
+    expect(api.util.log).to.be.a('function');
+    expect(api.metrics).to.be.an('object').and.have.keys('measure');
+    expect(api.metrics.measure).to.be.a('function');
 }
 
 describe('lmao', function () {
 
     it('Loads modules into a new object', function (done) {
         var api = lmao(descriptor);
-        expect(api).to.be.an('object').and.have.keys('service', 'static', 'util');
+        expect(api).to.be.an('object').and.have.keys('service', 'static', 'util', 'metrics');
         testApiProperties(api);
         done();
     });
@@ -46,7 +50,7 @@ describe('lmao', function () {
             log: console.log
         };
         lmao(api, descriptor);
-        expect(api).to.be.an('object').and.have.keys('service', 'static', 'util', 'log');
+        expect(api).to.be.an('object').and.have.keys('service', 'static', 'util', 'metrics', 'log');
         testApiProperties(api);
         done();
     });

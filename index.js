@@ -27,6 +27,9 @@ function lmao(target, descriptor) {
 
     Object.keys(descriptor).forEach(function (key) {
         var filepath = descriptor[key];
+        if (Array.isArray(filepath)) {
+            filepath = '{' + filepath.join(',') + '}';
+        }
         if (typeof filepath === 'string') {
             return set(filepath, key, key === '_root');
         }

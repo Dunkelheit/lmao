@@ -7,7 +7,7 @@ var api = module.exports = {
 };
 
 lmao(api, {
-    _root: 'example/util.js', // Root level modules
+    _root: ['example/util.js', 'example/metrics.js' ], // Root level modules
     client: 'example/client/*.js',
     'client.sap': {
         _root: 'example/client/sap/index.js',

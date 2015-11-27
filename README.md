@@ -51,7 +51,7 @@ var api = module.exports = {
 };
 
 lmao(api, {
-    _root: 'example/util.js', // Root level modules
+    _root: ['example/util.js', 'example/metrics.js' ], // Root level, multiple paths
     client: 'example/client/*.js',
     'client.sap': {
         _root: 'example/client/sap/index.js',
@@ -134,6 +134,7 @@ Loads modules into an object as defined by `descriptor`, optionally merging them
 * `descriptor` - An object that describes what modules will be loaded, and in what path they'll be placed.
   * The _keys_ of the descriptor are object paths in dot notation, like those of [keypather](http://npmjs.com/package/keypather).   
   * The _values_ of the descriptor are [glob](https://www.npmjs.com/package/glob) paths
+    * You can provide multiple paths with an array of strings
     * If you want to have more control over the destination, you can wrap the values in an object with properties `_root` and `_children`. Root modules will not use the file name as property name; children will. 
 
 **Example**
@@ -142,7 +143,7 @@ Builds an object loaded with modules in a specific structure.
 
 ```javascript
 lmao(api, {
-    _root: 'example/util.js', // Root level modules
+    _root: ['example/util.js', 'example/metrics.js' ], // Root level, multiple paths
     client: 'example/client/*.js',
     'client.sap': {
         _root: 'example/client/sap/index.js', // Root level modules (client.sap.*)
